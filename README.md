@@ -24,7 +24,8 @@ This project simulates a therapy session between three GPT-powered agents:
 
 ## Project Structure
 
-ai_agent_simulation/
+```
+patient_simulation/
 ├── main.py           # Entry point
 ├── agents.py         # Agent functions (patient, psychologist, supervisor, mood scorer)
 ├── prompts.py        # Cognitive model prompts for each agent
@@ -32,6 +33,7 @@ ai_agent_simulation/
 ├── logs/             # Saved conversation transcripts and mood chart
 ├── .env              # Your OpenAI API key (not committed to git)
 └── pyproject.toml    # Dependencies managed by uv
+```
 
 ---
 
@@ -69,13 +71,15 @@ Each turn follows this sequence:
 
 ## Supervisor Agent
 
-The supervisor observes every exchange and provides structured clinical feedback:
+The supervisor observes every exchange and provides structured clinical feedback after each turn:
 
-✅ What the psychologist did well
-⚠️  What could be improved
-💡 Suggested technique for the next turn
+| | Feedback |
+|---|---|
+| ✅ | What the psychologist did well |
+| ⚠️ | What could be improved |
+| 💡 | Suggested technique for the next turn |
 
-Evaluation criteria:
+**Evaluation criteria:**
 - Use of open-ended questions
 - Empathy and validation
 - Socratic questioning
@@ -86,11 +90,13 @@ Evaluation criteria:
 
 ## Mood Scoring
 
-The mood scorer rates each patient message on a scale of 1 to 10:
+The mood scorer rates each patient message on a scale of 1–10:
 
-1–3  → Distressed, hopeless, deeply negative
-4–6  → Mixed, neutral, some openness
-7–10 → Calm, hopeful, belief shifts emerging
+| Score | Interpretation |
+|-------|----------------|
+| 1–3   | Distressed, hopeless, deeply negative |
+| 4–6   | Mixed, neutral, some openness |
+| 7–10  | Calm, hopeful, belief shifts emerging |
 
 This allows quantitative comparison across sessions, profiles, and techniques.
 
@@ -99,19 +105,28 @@ This allows quantitative comparison across sessions, profiles, and techniques.
 ## Setup
 
 **1. Install uv**
+```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
+```
 
 **2. Clone and install dependencies**
-git clone https://github.com/yourname/ai_agent_simulation.git
-cd ai_agent_simulation
+```bash
+git clone https://github.com/yourname/patient_simulation.git
+cd patient_simulation
 uv sync
+```
 
 **3. Add your OpenAI API key**
-Create a .env file:
+
+Create a `.env` file:
+```
 OPENAI_API_KEY=your_key_here
+```
 
 **4. Run the simulation**
+```bash
 uv run python main.py
+```
 
 ---
 
