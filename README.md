@@ -111,8 +111,8 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 
 **2. Clone and install dependencies**
 ```bash
-git clone https://github.com/yourname/patient_simulation.git
-cd patient_simulation
+git clone https://github.com/Irl-Felix/patient-psi-simulation.git
+cd patient-psi-simulation
 uv sync
 ```
 
