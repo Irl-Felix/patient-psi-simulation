@@ -12,6 +12,32 @@
             box-sizing: border-box;
         }
 
+        nav {
+            display: flex;
+            gap: 4px;
+            padding: 10px 32px;
+            border-bottom: 1px solid #eeeeee;
+            background: #fafafa;
+        }
+
+        nav a {
+            font-size: 13px;
+            color: #999999;
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+        }
+
+        nav a:hover {
+            background: #f0f0f0;
+            color: #1a1a1a;
+        }
+
+        nav a.active {
+            background: #1a1a1a;
+            color: white;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             background: #ffffff;
@@ -159,6 +185,10 @@
 </head>
 
 <body>
+    <nav>
+        <a href="frontend.html" class="active">💬 Role-play</a>
+        <a href="simulation_live.html">🔬 Live Simulation</a>
+    </nav>
 
     <header>
         <h1>Patient-Ψ</h1>

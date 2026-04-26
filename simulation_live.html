@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient-Ψ — Live Simulation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        nav {
+            display: flex;
+            gap: 4px;
+            padding: 10px 32px;
+            border-bottom: 1px solid #eeeeee;
+            background: #fafafa;
+        }
+
+        nav a {
+            font-size: 13px;
+            color: #999999;
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+        }
+
+        nav a:hover {
+            background: #f0f0f0;
+            color: #1a1a1a;
+        }
+
+        nav a.active {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: #ffffff;
+            color: #1a1a1a;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            padding: 20px 32px;
+            border-bottom: 1px solid #eeeeee;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        header h1 {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .controls label {
+            font-size: 13px;
+            color: #999;
+        }
+
+        #turns-input {
+            width: 56px;
+            padding: 6px 10px;
+            border: 1px solid #dddddd;
+            border-radius: 6px;
+            font-size: 13px;
+            text-align: center;
+            outline: none;
+        }
+
+        #start-btn {
+            padding: 8px 20px;
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        #start-btn:hover {
+            background: #333;
+        }
+
+        #start-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+
+        #feed {
+            flex: 1;
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-width: 820px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .empty {
+            text-align: center;
+            color: #cccccc;
+            font-size: 14px;
+            margin-top: 80px;
+        }
+
+        .turn-header {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: #bbbbbb;
+            text-transform: uppercase;
+            padding: 8px 0 4px;
+            border-top: 1px solid #eeeeee;
+            margin-top: 8px;
+        }
+
+        .bubble {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .bubble .label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .bubble.patient .label {
+            color: #4a90d9;
+        }
+
+        .bubble.psychologist .label {
+            color: #2eaa72;
+        }
+
+        .bubble.supervisor .label {
+            color: #e07b3a;
+        }
+
+        .bubble.analysis .label {
+            color: #9b59b6;
+        }
+
+        .bubble .content {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #1a1a1a;
+            padding: 12px 16px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+        }
+
+        .bubble.patient .content {
+            background: #f0f6fd;
+        }
+
+        .bubble.psychologist .content {
+            background: #f0faf5;
+        }
+
+        .bubble.supervisor .content {
+            background: #fff8f3;
+            border-left: 3px solid #e07b3a;
+        }
+
+        .bubble.analysis .content {
+            background: #f9f5ff;
+            border-left: 3px solid #9b59b6;
+        }
+
+        .mood-badge {
+            display: inline-block;
+            font-size: 12px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            background: #f4f4f4;
+            color: #555;
+            margin-top: 2px;
+            width: fit-content;
+        }
+
+        .mood-badge.low {
+            background: #fdecea;
+            color: #c0392b;
+        }
+
+        .mood-badge.mid {
+            background: #fef9ec;
+            color: #d4a017;
+        }
+
+        .mood-badge.high {
+            background: #edfaf3;
+            color: #1e8449;
+        }
+
+        #status {
+            text-align: center;
+            font-size: 13px;
+            color: #aaaaaa;
+            padding: 12px;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <a href="frontend.html">💬 Role-play</a>
+        <a href="simulation_live.html">🔬 Live Simulation</a>
+    </nav>
+
+    <header>
+        <h1>Patient-Ψ — Live Simulation</h1>
+        <div class="controls">
+            <label for="turns-input">Turns</label>
+            <input type="number" id="turns-input" value="10" min="1" max="30">
+            <button id="start-btn" onclick="startSimulation()">Start Simulation</button>
+        </div>
+    </header>
+
+    <div id="feed">
+        <div class="empty">Press Start Simulation to watch the session play out.</div>
+    </div>
+
+    <div id="status"></div>
+
+    <script>
+        const feed = document.getElementById("feed")
+        const status = document.getElementById("status")
+        const btn = document.getElementById("start-btn")
+
+        function getMoodClass(score) {
+            if (score <= 3) return "low"
+            if (score <= 6) return "mid"
+            return "high"
+        }
+
+        function addTurnHeader(turn) {
+            const div = document.createElement("div")
+            div.className = "turn-header"
+            div.textContent = `Turn ${turn}`
+            feed.appendChild(div)
+        }
+
+        function addBubble(type, label, content) {
+            const div = document.createElement("div")
+            div.className = `bubble ${type}`
+            div.innerHTML = `
+      <div class="label">${label}</div>
+      <div class="content">${content.replace(/\n/g, "<br>")}</div>
+    `
+            feed.appendChild(div)
+            feed.scrollTop = feed.scrollHeight
+            window.scrollTo(0, document.body.scrollHeight)
+        }
+
+        function addMood(score) {
+            const cls = getMoodClass(score)
+            const label = score <= 3 ? "Distressed" : score <= 6 ? "Neutral" : "Positive"
+            const div = document.createElement("div")
+            div.className = `mood-badge ${cls}`
+            div.textContent = `Mood score: ${score}/10 — ${label}`
+            feed.appendChild(div)
+        }
+
+        function setStatus(text) {
+            status.textContent = text
+        }
+
+        async function startSimulation() {
+            // Clear feed
+            feed.innerHTML = ""
+            btn.disabled = true
+            const turns = document.getElementById("turns-input").value || 10
+            setStatus("Simulation running...")
+
+            const evtSource = new EventSource(`http://localhost:8000/simulate?turns=${turns}`)
+
+            evtSource.onmessage = (event) => {
+                const data = JSON.parse(event.data)
+
+                if (data.type === "turn") {
+                    addTurnHeader(data.turn)
+                } else if (data.type === "patient") {
+                    addBubble("patient", "🧑 Patient", data.content)
+                } else if (data.type === "mood") {
+                    addMood(data.score)
+                } else if (data.type === "psychologist") {
+                    addBubble("psychologist", "🧠 Psychologist", data.content)
+                } else if (data.type === "supervisor") {
+                    addBubble("supervisor", "👁 Supervisor", data.content)
+                } else if (data.type === "analysis") {
+                    addBubble("analysis", "📊 Session Analysis", data.content)
+                } else if (data.type === "done") {
+                    setStatus("Simulation complete.")
+                    btn.disabled = false
+                    evtSource.close()
+                }
+            }
+
+            evtSource.onerror = () => {
+                setStatus("Error — make sure the API is running on localhost:8000")
+                btn.disabled = false
+                evtSource.close()
+            }
+        }
+    </script>
+
+</body>
+
+</html>
