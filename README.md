@@ -104,28 +104,49 @@ This allows quantitative comparison across sessions, profiles, and techniques.
 
 ## Setup
 
-**1. Install uv**
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
-
-**2. Clone and install dependencies**
+**1. Clone the repo**
 ```bash
 git clone https://github.com/Irl-Felix/patient-psi-simulation.git
 cd patient-psi-simulation
-uv sync
 ```
 
-**3. Add your OpenAI API key**
+**2. Add your OpenAI API key**
 
 Create a `.env` file:
 ```
 OPENAI_API_KEY=your_key_here
 ```
 
-**4. Run the simulation**
+---
+
+## Running the Project
+
+### Terminal only (no server)
 ```bash
+# Install uv if you don't have it
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+uv sync
 uv run python main.py
+```
+
+### FastAPI server
+```bash
+uv sync
+uv run uvicorn api:app --reload
+```
+Then visit `http://localhost:8000/docs` to explore and test the API.
+
+### Docker
+```bash
+# Build the image
+docker build -t patient-simulation .
+
+# Run with a .env file
+docker run -p 8000:8000 --env-file .env patient-simulation
+
+# Or pass the key directly
+docker run -p 8000:8000 -e OPENAI_API_KEY=your_key_here patient-simulation
 ```
 
 ---
